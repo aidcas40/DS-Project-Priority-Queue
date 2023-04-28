@@ -1,4 +1,4 @@
-// PriorityQueue-Patient-Project.cpp
+ // PriorityQueue-Patient-Project.cpp
 //  demonstrates priority queue with linkked list in a hospital patient scenario
 #include <iostream>
 #include <climits>
@@ -382,10 +382,10 @@ int main()
             int condition;
             // Prompt user for patient condition
             cout << "Enter patient condition:\n";
-            cout << "1. Life-threatening\n";
-            cout << "2. Critical\n";
-            cout << "3. Neutral\n";
-            cout << "4. Non-critical\n";
+            cout << "1. Life-threatening [0-20]\n";
+            cout << "2. Critical [21-40]\n";
+            cout << "3. Neutral [41-60]\n";
+            cout << "4. Non-critical [61+]\n";
             cout << "Select an option: ";
             cin >> condition;
             
@@ -393,59 +393,81 @@ int main()
             int minPriority, maxPriority;
             switch (condition) {
                 case 1:
-                    minPriority = 0;
-                    maxPriority = 20;
-                    break;
-                case 2:
-                    minPriority = 21;
-                    maxPriority = 40;
-                    break;
-                case 3:
-                    minPriority = 41;
-                    maxPriority = 60;
-                    break;
-                case 4:
-                    minPriority = 61;
-                    maxPriority = INT_MAX; // Highest possible value for max priority
-                    break;
-                default:
-                    cout << "Invalid option. Assigning non-critical priority.\n";
-                    minPriority = 61;
-                    maxPriority = INT_MAX; // Default to lowest priority range
-                    break;
-            }
-            
-            int priority = -1;
-            for (int i = minPriority; i <= maxPriority; i++) {
-                bool found = false;
-                for (int j = 0; j < 100; j++) {
-                    if(/*ARRAY WHERE PATIENTS ARE STORE*/[j].priority == i)
+                {
+                    
+                    cout << "Choose Priority Level within the Life-Threatening Range [0-20]: ";
+                    cin >> priority;
+                    
+                    cout << endl;
+                    
+                    while(priority < 0 || priority > 20  || theList.uniquePatPrior(priority) )
                     {
-                        found = true;
-                        break;
+                        cout << "Priority Level is not within Range or Taken: Enter any number between 0-20 that is FREE!" << endl;
+                        cout << "Choose Priority Level within the Life-Threatening Range [0-20]: ";
+                        cin >> priority;
                     }
+                    break;
+                }    
+                case 2:
+                {
+                    cout << "Choose Priority Level within the Critical [21-40]: ";
+                    cin >> priority;
+                    
+                    cout << endl;
+                    
+                    while(priority < 21 || priority > 40  || theList.uniquePatPrior(priority) )
+                    {
+                        cout << "Priority Level is not within Range or Taken: Enter any number between 21-40 that is FREE!" << endl;
+                        cout << "Choose Priority Level within the Life-Threatening Range [21-40]: ";
+                        cin >> priority;
+                    }
+                    break;
                 }
-                if (!found) {
-                    priority = i;
+                case 3:
+                {
+                    cout << "Choose Priority Level within the Neutral [41-60]: ";
+                    cin >> priority;
+                    
+                    cout << endl;
+                    
+                    while(priority < 41 || priority > 60  || theList.uniquePatPrior(priority) )
+                    {
+                        cout << "Priority Level is not within Range or Taken: Enter any number between 41-60 that is FREE!" << endl;
+                        cout << "Choose Priority Level within the Life-Threatening Range [41-60]: ";
+                        cin >> priority;
+                    }
+                    break;
+                }
+                case 4:
+                {
+                    cout << "Choose Priority Level within the Non-Critical [61+]: ";
+                    cin >> priority;
+                    
+                    cout << endl;
+                    
+                    while(priority < 61 || theList.uniquePatPrior(priority) )
+                    {
+                        cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                        cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
+                        cin >> priority;
+                    }
+                    break;
+                }
+                default:
+                {
+                    cout << "Invalid Option: Choose Priority Level within the Non-Critical Range [61+]: ";
+                    cin >> priority;
+                    
+                    while(priority < 61 || theList.uniquePatPrior(priority) )
+                    {
+                        cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                        cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
+                        cin >> priority;
+                    }
                     break;
                 }
             }
             
-            /*If no priority level is available, assign the highest priority
-            if (priority == -1) {
-                priority = maxPriority;
-            }
-            */
-            
-            while (theList.uniquePatPrior(priority))
-            {
-                cout << "Warning: Priority Number has already in use" << endl;
-                cout << endl;
-                cout << "Enter the Priority of the Patient: ";
-                cin >> priority;
-                cin.ignore();
-            }
-
             theList.insert(ssn, name, age, gender, medcondition, priority);
             cout << endl
                  << "Patient was added to the queue.";
