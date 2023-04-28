@@ -1,8 +1,13 @@
 // PriorityQueue-Patient-Project.cpp
 //  demonstrates priority queue with linkked list in a hospital patient scenario
 #include <iostream>
+#include <climits>
 #include <vector>
+
+
 using namespace std;
+
+
 ////////////////////////////////////////////////////////////////
 class Patient
 {
@@ -238,89 +243,6 @@ public:
         }
         return false; // returns false when it is unique
     }
-    //--------------------------------------------------------------
-    /*Link *getTail(Link *cur)
-    {
-        while (cur != NULL && cur->pNext != NULL)
-            cur = cur->pNext;
-        return cur;
-    }
-
-    Link *partition(Link *head, Link *end, Link **newHead, Link **newEnd)
-    {
-        Link *pivot = end;
-        Link *prev = NULL, *cur = head, *tail = pivot;
-        // During the time of partition, both the head and end of the list
-        // might change and the changes will be updated in the newHead and
-        // newEnd variables
-        while (cur != pivot)
-        {
-            if (cur->patient->getPriority() < pivot->patient->getPriority())
-            {
-                // The first node that will be having value less than the
-                // pivot node value will become the new head
-                if ((*newHead) == NULL)
-                    (*newHead) = cur;
-                prev = cur;
-                cur = cur->pNext;
-            }
-            else // If the value of the cur node is greater than that of the pivot
-            {
-                // We will move the cur node to next of tail, and will update tail
-                if (prev)
-                {
-                    prev->pNext = cur->pNext;
-                }
-                Link *tmp = cur->pNext;
-                cur->pNext = NULL;
-                tail->pNext = cur;
-                tail = cur;
-                cur = tmp;
-            }
-        }
-        // If the data of the pivot node is smallest in the
-        // current list, then we will make pivot as the head
-        if ((*newHead) == NULL)
-            (*newHead) = pivot;
-        // newEnd will be updated to the current last node
-        (*newEnd) = tail;
-        // Finally, we will return the pivot node
-        return pivot;
-    }
-    // Quick sort recursive function
-    Link *quickSortRecur(Link *head, Link *end)
-    {
-        // base condition
-        if (!head || head == end)
-            return head;
-        Link *newHead = NULL, *newEnd = NULL;
-        // We will call the partition function and it will partition the list
-        // and will also update newHead and newEnd
-        // it will return the pivot node
-        Link *pivot = partition(head, end, &newHead, &newEnd);
-        // If our pivot is the smallest element in the current list
-        // then there is no need to recur for the left part of the list
-        if (newHead != pivot)
-        {
-            Link *tmp = newHead;
-            while (tmp->pNext != pivot)
-                tmp = tmp->pNext;
-            tmp->pNext = NULL;
-            // Now we will recur for the list before the pivot
-            newHead = quickSortRecur(newHead, tmp);
-            tmp = getTail(newHead);
-            tmp->pNext = pivot;
-        }
-        // Now we will recur for the list after the pivot
-        pivot->pNext = quickSortRecur(pivot->pNext, newEnd);
-        return newHead;
-    }
-    // Ths is the function for quicksort.
-    void quickSort(Link **headRef)
-    {
-        (*headRef) = quickSortRecur(*headRef, getTail(*headRef));
-        return;
-    }*/
     //-------------------------------------------------------------
     void sortedInsert(Link* newnode)
     {
@@ -372,29 +294,6 @@ public:
         // sorted linked list
         pFirst = sorted;
     }
-    //-------------------------------------------------------------
-    /*bool updatePriorAltTry(int oldPrior, int newPrior)
-    {
-        Link *pCurrent = pFirst;
-        Link *position;
-        position = findPatPrior(oldPrior);
-        if (position != NULL)
-        {
-            for (int i = 1; i < position->patient->getPriority(); i++)
-            {
-                pCurrent = pCurrent->pNext;
-            }
-            pCurrent->patient->setPriority(newPrior);
-            cout << "Patient's Priority was updated successfully." << endl;
-            return true;
-        }
-        else
-        {
-            cout << "Priority not found." << endl;
-            return false;
-        }
-    }*/
-
     void updatePrior(int oldPrior, int newPrior)
     {
         Link *pCurrent = pFirst;
