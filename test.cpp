@@ -38,6 +38,10 @@ public:
         cout << "Medical Condition: " << medcondition; // displays Patient's Medical Condition
         cout << endl;
     }
+    void displayPriority()
+    {
+        cout << getPriority() << " ";
+    }
     //--------------------------------------------------------------
 
     int getPriority() // get Priority number
@@ -78,6 +82,10 @@ public:
     void displayLink()
     {
         patient->displayPatient();
+    }
+    void displayPatPriority()
+    {
+        patient->displayPriority();
     }
 };
 ////////////////////////////////////////////////////////////////
@@ -215,6 +223,18 @@ public:
         }
         cout << endl;
     }
+    //-------------------------------------------------------------
+    void displayPrior() // display the all priorities
+    {
+        cout << "List (first-->last): \n";
+        Link *pCurrent = pFirst; // start at beginning of list
+        while (pCurrent != NULL) // until end of list,
+        {
+            pCurrent->displayPatPriority();    // print data
+            pCurrent = pCurrent->pNext; // move to next link
+        }
+        cout << endl;
+    }
     //--------------------------------------------------------------
     bool uniquePatSSN(int uniqueSSN) // method that checks if SSN is Unique
     {
@@ -342,20 +362,15 @@ int main()
     cout << "Enter choice: ";
     cin >> choice;
 
+    cout << "//--------------------------------------------------------------//\n";
+    
     while (choice != '6')
     {
         switch (choice)
         {
         case '1': // insert
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-            cout << endl
-                 << endl;
-
+            
             cout << "Enter the Patient's Social Security Number: ";
             cin >> ssn;
             cin.ignore();
@@ -391,6 +406,18 @@ int main()
             
             // Determine priority range and find the first available priority level
             int minPriority, maxPriority;
+            
+            //Showing the user all taken 
+            cout << "All Priorities Taken: ";
+            if (!theList.isEmpty())
+            {
+                theList.displayPrior();
+            }
+            else
+            {
+                cout << "Queue is empty, nothing to display!" << endl;
+            }
+            
             switch (condition) {
                 case 1:
                 {
@@ -403,6 +430,15 @@ int main()
                     while(priority < 0 || priority > 20  || theList.uniquePatPrior(priority) )
                     {
                         cout << "Priority Level is not within Range or Taken: Enter any number between 0-20 that is FREE!" << endl;
+                        cout << "All Priorities Taken: ";
+                        if (!theList.isEmpty())
+                        {
+                            theList.displayPrior();
+                        }
+                        else
+                        {
+                            cout << "Queue is empty, nothing to display!" << endl;
+                        }
                         cout << "Choose Priority Level within the Life-Threatening Range [0-20]: ";
                         cin >> priority;
                     }
@@ -410,6 +446,7 @@ int main()
                 }    
                 case 2:
                 {
+                    
                     cout << "Choose Priority Level within the Critical [21-40]: ";
                     cin >> priority;
                     
@@ -418,6 +455,16 @@ int main()
                     while(priority < 21 || priority > 40  || theList.uniquePatPrior(priority) )
                     {
                         cout << "Priority Level is not within Range or Taken: Enter any number between 21-40 that is FREE!" << endl;
+                        //Showing the user all taken 
+                        cout << "All Priorities Taken: ";
+                        if (!theList.isEmpty())
+                        {
+                            theList.displayPrior();
+                        }
+                        else
+                        {
+                            cout << "Queue is empty, nothing to display!" << endl;
+                        }
                         cout << "Choose Priority Level within the Life-Threatening Range [21-40]: ";
                         cin >> priority;
                     }
@@ -433,6 +480,16 @@ int main()
                     while(priority < 41 || priority > 60  || theList.uniquePatPrior(priority) )
                     {
                         cout << "Priority Level is not within Range or Taken: Enter any number between 41-60 that is FREE!" << endl;
+                        //Showing the user all taken 
+                        cout << "All Priorities Taken: ";
+                        if (!theList.isEmpty())
+                        {
+                            theList.displayPrior();
+                        }
+                        else
+                        {
+                            cout << "Queue is empty, nothing to display!" << endl;
+                        }
                         cout << "Choose Priority Level within the Life-Threatening Range [41-60]: ";
                         cin >> priority;
                     }
@@ -448,6 +505,16 @@ int main()
                     while(priority < 61 || theList.uniquePatPrior(priority) )
                     {
                         cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                        //Showing the user all taken 
+                        cout << "All Priorities Taken: ";
+                        if (!theList.isEmpty())
+                        {
+                            theList.displayPrior();
+                        }
+                        else
+                        {
+                            cout << "Queue is empty, nothing to display!" << endl;
+                        }
                         cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
                         cin >> priority;
                     }
@@ -461,6 +528,16 @@ int main()
                     while(priority < 61 || theList.uniquePatPrior(priority) )
                     {
                         cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                        //Showing the user all taken 
+                        cout << "All Priorities Taken: ";
+                        if (!theList.isEmpty())
+                        {
+                            theList.displayPrior();
+                        }
+                        else
+                        {
+                            cout << "Queue is empty, nothing to display!" << endl;
+                        }
                         cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
                         cin >> priority;
                     }
@@ -495,15 +572,6 @@ int main()
         }
         case '3': // display all
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-
-            cout << endl
-                 << endl;
-
             if (!theList.isEmpty())
             {
                 theList.displayList();
@@ -518,12 +586,6 @@ int main()
         }
         case '4': // update priority
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-
             cout << endl
                  << endl;
 
@@ -547,12 +609,6 @@ int main()
         }
         case '5': // search
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-
             cout << endl
                  << endl;
 
