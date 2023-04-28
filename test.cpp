@@ -327,6 +327,7 @@ public:
 ////////////////////////////////////////////////////////////////
 int main()
 {
+    
     LinkList theList; // make new list
     char choice;
     int ssn, age, priority;
@@ -417,8 +418,9 @@ int main()
             int priority = -1;
             for (int i = minPriority; i <= maxPriority; i++) {
                 bool found = false;
-                for (int j = 0; j < pq.size(); j++) {
-                    if (pq[j].priority == i) {
+                for (int j = 0; j < 100; j++) {
+                    if(/*ARRAY WHERE PATIENTS ARE STORE*/[j].priority == i)
+                    {
                         found = true;
                         break;
                     }
@@ -429,10 +431,11 @@ int main()
                 }
             }
             
-            // If no priority level is available, assign the highest priority
+            /*If no priority level is available, assign the highest priority
             if (priority == -1) {
                 priority = maxPriority;
             }
+            */
             
             while (theList.uniquePatPrior(priority))
             {
