@@ -387,20 +387,20 @@ int main()
             // Assign priority based on order of insertion
             switch (priority) {
                 case 1:
-                    priority = patientsByPriority[0].size() + 1;
+                    priority = 
                     break;
                 case 2:
-                    priority = patientsByPriority[1].size() + 21;
+                    priority =
                     break;
                 case 3:
-                    priority = patientsByPriority[2].size() + 41;
+                    priority = 
                     break;
                 case 4:
-                    priority = patientsByPriority[3].size() + 61;
+                    priority =
                     break;
                 default:
                     cout << "Invalid option. Assigning non-critical priority.\n";
-                    priority = patientsByPriority[3].size() + 61;
+                    priority =
                     break;
             }
             
