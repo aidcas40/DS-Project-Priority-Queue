@@ -1,8 +1,11 @@
 // PriorityQueue-Patient-Project.cpp
 //  demonstrates priority queue with linkked list in a hospital patient scenario
 #include <iostream>
+#include <climits>
 #include <vector>
+
 using namespace std;
+
 ////////////////////////////////////////////////////////////////
 class Patient
 {
@@ -27,11 +30,15 @@ public:
         cout << "Name: " << name; // displays Patient's Name
         cout << ", ";
         cout << "Age: " << age; // displays Patient's Age
-        cout << ", ";
-        cout << "Gender: " << gender; // displays Patient's Gender
         cout << ", \n";
+        cout << "Gender: " << gender; // displays Patient's Gender
+        cout << ", ";
         cout << "Medical Condition: " << medcondition; // displays Patient's Medical Condition
         cout << endl;
+    }
+    void displayPriority()  // function to display priority number
+    {
+        cout << getPriority() << " ";
     }
     //--------------------------------------------------------------
 
@@ -55,7 +62,7 @@ public:
         return medcondition;
     }
 
-    void setPriority(int priority)
+    void setPriority(int priority)  // set priority
     {
         this->priority = priority;
     }
@@ -73,6 +80,10 @@ public:
     void displayLink()
     {
         patient->displayPatient();
+    }
+    void displayPatPriority()
+    {
+        patient->displayPriority();
     }
 };
 ////////////////////////////////////////////////////////////////
@@ -101,7 +112,7 @@ public:
         return pFirst;
     }
     //-------------------------------------------------------------
-    bool isEmpty()
+    bool isEmpty()  // is empty
     {
         return pFirst == NULL;
     }
@@ -128,7 +139,7 @@ public:
         }
     }
     //-------------------------------------------------------------
-    Link *findPatSSN(int findSSN)
+    Link *findPatSSN(int findSSN) // method that searches for patient's social security number
     {
         Link *pCurrent = pFirst;
         while (pCurrent != NULL)
@@ -142,7 +153,7 @@ public:
         return NULL;
     }
     //-------------------------------------------------------------
-    Link *findPatName(string findName)
+    Link *findPatName(string findName) // method that searches for patient's name
     {
         Link *pCurrent = pFirst;
         while (pCurrent != NULL)
@@ -156,7 +167,7 @@ public:
         return NULL;
     }
     //-------------------------------------------------------------
-    Link *findPatPrior(int findPrior)
+    Link *findPatPrior(int findPrior) // method that searches for patient's priority
     {
         Link *pCurrent = pFirst;
         while (pCurrent != NULL)
@@ -170,43 +181,47 @@ public:
         return NULL;
     }
     //-------------------------------------------------------------
-    void removeFirst()
+    bool checkPatPrior(int findPrior) // method that checks if a priority exists in the list
+    {
+        Link *pCurrent = pFirst;
+        while (pCurrent != NULL)
+        {
+            if (pCurrent->patient->getPriority() == findPrior)
+            {
+                return true;
+            }
+            pCurrent = pCurrent->pNext;
+        }
+        return false;
+    }
+    //-------------------------------------------------------------
+    void removeFirst() // method that removes the first object in the list
     {
         Link *pTemp = pFirst;
         pFirst = pFirst->pNext;
         delete pTemp;
     }
     //-------------------------------------------------------------
-    bool remove(int removeSSN)   // remove link with given key
-    {                            //(assumes non-empty list)
-        Link *pCurrent = pFirst; // search for link
-        Link *pPrevious = pFirst;
-        while (pCurrent->patient->getSSN() != removeSSN)
-        {
-            if (pCurrent->pNext == NULL)
-                return false; // didn't find it
-            else
-            {
-                pPrevious = pCurrent; // go to next link
-                pCurrent = pCurrent->pNext;
-            }
-        }                                       // found it
-        if (pCurrent == pFirst)                 // if first link,
-            pFirst = pFirst->pNext;             // change first
-        else                                    // otherwise,
-            pPrevious->pNext = pCurrent->pNext; // bypass it
-        delete pCurrent;                        // delete link
-        return true;                            // successful removal
-    }
-    //-------------------------------------------------------------
     void displayList() // display the list
     {
-        cout << "List (first-->last): \n";
+        cout << "Remaining Patients (first-->last): \n";
         Link *pCurrent = pFirst; // start at beginning of list
         while (pCurrent != NULL) // until end of list,
         {
             pCurrent->displayLink();    // print data
             pCurrent = pCurrent->pNext; // move to next link
+        }
+        cout << endl;
+    }
+    //-------------------------------------------------------------
+    void displayPrior() // display the all priorities
+    {
+        cout << "List (first-->last): \n";
+        Link *pCurrent = pFirst; // start at beginning of list
+        while (pCurrent != NULL) // until end of list,
+        {
+            pCurrent->displayPatPriority(); // print data
+            pCurrent = pCurrent->pNext;     // move to next link
         }
         cout << endl;
     }
@@ -238,91 +253,8 @@ public:
         }
         return false; // returns false when it is unique
     }
-    //--------------------------------------------------------------
-    /*Link *getTail(Link *cur)
-    {
-        while (cur != NULL && cur->pNext != NULL)
-            cur = cur->pNext;
-        return cur;
-    }
-
-    Link *partition(Link *head, Link *end, Link **newHead, Link **newEnd)
-    {
-        Link *pivot = end;
-        Link *prev = NULL, *cur = head, *tail = pivot;
-        // During the time of partition, both the head and end of the list
-        // might change and the changes will be updated in the newHead and
-        // newEnd variables
-        while (cur != pivot)
-        {
-            if (cur->patient->getPriority() < pivot->patient->getPriority())
-            {
-                // The first node that will be having value less than the
-                // pivot node value will become the new head
-                if ((*newHead) == NULL)
-                    (*newHead) = cur;
-                prev = cur;
-                cur = cur->pNext;
-            }
-            else // If the value of the cur node is greater than that of the pivot
-            {
-                // We will move the cur node to next of tail, and will update tail
-                if (prev)
-                {
-                    prev->pNext = cur->pNext;
-                }
-                Link *tmp = cur->pNext;
-                cur->pNext = NULL;
-                tail->pNext = cur;
-                tail = cur;
-                cur = tmp;
-            }
-        }
-        // If the data of the pivot node is smallest in the
-        // current list, then we will make pivot as the head
-        if ((*newHead) == NULL)
-            (*newHead) = pivot;
-        // newEnd will be updated to the current last node
-        (*newEnd) = tail;
-        // Finally, we will return the pivot node
-        return pivot;
-    }
-    // Quick sort recursive function
-    Link *quickSortRecur(Link *head, Link *end)
-    {
-        // base condition
-        if (!head || head == end)
-            return head;
-        Link *newHead = NULL, *newEnd = NULL;
-        // We will call the partition function and it will partition the list
-        // and will also update newHead and newEnd
-        // it will return the pivot node
-        Link *pivot = partition(head, end, &newHead, &newEnd);
-        // If our pivot is the smallest element in the current list
-        // then there is no need to recur for the left part of the list
-        if (newHead != pivot)
-        {
-            Link *tmp = newHead;
-            while (tmp->pNext != pivot)
-                tmp = tmp->pNext;
-            tmp->pNext = NULL;
-            // Now we will recur for the list before the pivot
-            newHead = quickSortRecur(newHead, tmp);
-            tmp = getTail(newHead);
-            tmp->pNext = pivot;
-        }
-        // Now we will recur for the list after the pivot
-        pivot->pNext = quickSortRecur(pivot->pNext, newEnd);
-        return newHead;
-    }
-    // Ths is the function for quicksort.
-    void quickSort(Link **headRef)
-    {
-        (*headRef) = quickSortRecur(*headRef, getTail(*headRef));
-        return;
-    }*/
     //-------------------------------------------------------------
-    void sortedInsert(Link* newnode)
+    void sortedInsert(Link *newnode)
     {
         // Special case for the head end
         if (sorted == NULL ||
@@ -333,8 +265,8 @@ public:
         }
         else
         {
-            Link* pCurrent = sorted;
- 
+            Link *pCurrent = sorted;
+
             /* Locate the node before the
                point of insertion */
             while (pCurrent->pNext != NULL &&
@@ -346,56 +278,34 @@ public:
             pCurrent->pNext = newnode;
         }
     }
-    
-    void insertionSort(Link* headref)
+
+    void insertionSort(Link *headref)
     {
         // Initialize sorted linked list
         sorted = NULL;
         Link *pCurrent = pFirst;
- 
+
         // Traverse the given linked list
         // and insert every node to sorted
         while (pCurrent != NULL)
         {
             // Store next for next iteration
-            Link* next = pCurrent->pNext;
- 
+            Link *next = pCurrent->pNext;
+
             // Insert current in sorted
             // linked list
             sortedInsert(pCurrent);
- 
+
             // Update current
             pCurrent = next;
         }
- 
+
         // Update head_ref to point to
         // sorted linked list
         pFirst = sorted;
     }
     //-------------------------------------------------------------
-    /*bool updatePriorAltTry(int oldPrior, int newPrior)
-    {
-        Link *pCurrent = pFirst;
-        Link *position;
-        position = findPatPrior(oldPrior);
-        if (position != NULL)
-        {
-            for (int i = 1; i < position->patient->getPriority(); i++)
-            {
-                pCurrent = pCurrent->pNext;
-            }
-            pCurrent->patient->setPriority(newPrior);
-            cout << "Patient's Priority was updated successfully." << endl;
-            return true;
-        }
-        else
-        {
-            cout << "Priority not found." << endl;
-            return false;
-        }
-    }*/
-
-    void updatePrior(int oldPrior, int newPrior)
+    void updatePrior(int oldPrior, int newPrior) // This method updates the priority of patients in the queue
     {
         Link *pCurrent = pFirst;
         while (pCurrent != NULL)
@@ -403,7 +313,7 @@ public:
             if (pCurrent->patient->getPriority() == oldPrior)
             {
                 pCurrent->patient->setPriority(newPrior);
-                cout << "Priority " << oldPrior << " successfully changed to Priority " << newPrior << "."<< endl;
+                cout << "Priority " << oldPrior << " successfully changed to Priority " << newPrior << "." << endl;
                 return;
             }
 
@@ -428,6 +338,7 @@ public:
 ////////////////////////////////////////////////////////////////
 int main()
 {
+
     LinkList theList; // make new list
     char choice;
     int ssn, age, priority;
@@ -442,19 +353,14 @@ int main()
     cout << "Enter choice: ";
     cin >> choice;
 
+    cout << "//--------------------------------------------------------------//\n";
+
     while (choice != '6')
     {
         switch (choice)
         {
         case '1': // insert
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-            cout << endl
-                 << endl;
 
             cout << "Enter the Patient's Social Security Number: ";
             cin >> ssn;
@@ -478,16 +384,157 @@ int main()
             cin.ignore();
             cout << "Enter the Patient's Medical Condition: ";
             getline(cin, medcondition);
-            cout << "Enter the Priority of the Patient: ";
-            cin >> priority;
 
-            while (theList.uniquePatPrior(priority))
+            int condition;
+            // Prompt user for patient condition
+            cout << "Enter patient condition:\n";
+            cout << "1. Life-threatening [0-20]\n";
+            cout << "2. Critical [21-40]\n";
+            cout << "3. Neutral [41-60]\n";
+            cout << "4. Non-critical [61+]\n";
+            cout << "Select an option: ";
+            cin >> condition;
+
+            // Determine priority range and find the first available priority level
+            int minPriority, maxPriority;
+
+            // Showing the user all taken
+            cout << "All Priorities Taken: ";
+            if (!theList.isEmpty())
             {
-                cout << "Warning: Priority Number has already in use" << endl;
-                cout << endl;
-                cout << "Enter the Priority of the Patient: ";
+                theList.displayPrior();
+            }
+            else
+            {
+                cout << "Queue is empty, nothing to display!" << endl;
+            }
+
+            switch (condition)
+            {
+            case 1:
+            {
+
+                cout << "Choose Priority Level within the Life-Threatening Range [0-20]: ";
                 cin >> priority;
-                cin.ignore();
+
+                cout << endl;
+
+                while (priority < 0 || priority > 20 || theList.uniquePatPrior(priority))
+                {
+                    cout << "Priority Level is not within Range or Taken: Enter any number between 0-20 that is FREE!" << endl;
+                    cout << "All Priorities Taken: ";
+                    if (!theList.isEmpty())
+                    {
+                        theList.displayPrior();
+                    }
+                    else
+                    {
+                        cout << "Queue is empty, nothing to display!" << endl;
+                    }
+                    cout << "Choose Priority Level within the Life-Threatening Range [0-20]: ";
+                    cin >> priority;
+                }
+                break;
+            }
+            case 2:
+            {
+
+                cout << "Choose Priority Level within the Critical [21-40]: ";
+                cin >> priority;
+
+                cout << endl;
+
+                while (priority < 21 || priority > 40 || theList.uniquePatPrior(priority))
+                {
+                    cout << "Priority Level is not within Range or Taken: Enter any number between 21-40 that is FREE!" << endl;
+                    // Showing the user all taken
+                    cout << "All Priorities Taken: ";
+                    if (!theList.isEmpty())
+                    {
+                        theList.displayPrior();
+                    }
+                    else
+                    {
+                        cout << "Queue is empty, nothing to display!" << endl;
+                    }
+                    cout << "Choose Priority Level within the Life-Threatening Range [21-40]: ";
+                    cin >> priority;
+                }
+                break;
+            }
+            case 3:
+            {
+                cout << "Choose Priority Level within the Neutral [41-60]: ";
+                cin >> priority;
+
+                cout << endl;
+
+                while (priority < 41 || priority > 60 || theList.uniquePatPrior(priority))
+                {
+                    cout << "Priority Level is not within Range or Taken: Enter any number between 41-60 that is FREE!" << endl;
+                    // Showing the user all taken
+                    cout << "All Priorities Taken: ";
+                    if (!theList.isEmpty())
+                    {
+                        theList.displayPrior();
+                    }
+                    else
+                    {
+                        cout << "Queue is empty, nothing to display!" << endl;
+                    }
+                    cout << "Choose Priority Level within the Life-Threatening Range [41-60]: ";
+                    cin >> priority;
+                }
+                break;
+            }
+            case 4:
+            {
+                cout << "Choose Priority Level within the Non-Critical [61+]: ";
+                cin >> priority;
+
+                cout << endl;
+
+                while (priority < 61 || theList.uniquePatPrior(priority))
+                {
+                    cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                    // Showing the user all taken
+                    cout << "All Priorities Taken: ";
+                    if (!theList.isEmpty())
+                    {
+                        theList.displayPrior();
+                    }
+                    else
+                    {
+                        cout << "Queue is empty, nothing to display!" << endl;
+                    }
+                    cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
+                    cin >> priority;
+                }
+                break;
+            }
+            default:
+            {
+                cout << "Invalid Option: Choose Priority Level within the Non-Critical Range [61+]: ";
+                cin >> priority;
+
+                while (priority < 61 || theList.uniquePatPrior(priority))
+                {
+                    cout << "Priority Level is not within Range or Taken: Enter any number above 61 that is FREE!" << endl;
+                    // Showing the user all taken
+                    cout << "All Priorities Taken: ";
+                    if (!theList.isEmpty())
+                    {
+                        theList.displayPrior();
+                    }
+                    else
+                    {
+                        cout << "Queue is empty, nothing to display!" << endl;
+                    }
+                    cout << "Choose Priority Level within the Life-Threatening Range [61+]: ";
+                    cin >> priority;
+                }
+                break;
+            }
             }
 
             theList.insert(ssn, name, age, gender, medcondition, priority);
@@ -500,35 +547,27 @@ int main()
         }
         case '2': // remove first
         {
-            if (!theList.isEmpty())
+            if (!theList.isEmpty()) // if the queue is not empty
             {
-                theList.removeFirst();
+                theList.removeFirst();  // remove the first patient
                 cout << endl;
-                cout << "Patient was tended to." << endl;
+                cout << "Patient was tended to." << endl
+                     << endl;
+                theList.displayList();      // display the entire list
             }
             else
             {
                 cout << "The queue is empty, cannot tend to any patients." << endl;
             }
             cout << endl;
-            theList.displayList();
             cout << endl;
             break;
         }
         case '3': // display all
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
+            if (!theList.isEmpty()) // if the queue is not empty
             {
-                cout << "-";
-            }
-
-            cout << endl
-                 << endl;
-
-            if (!theList.isEmpty())
-            {
-                theList.displayList();
+                theList.displayList(); // display the entire list
             }
             else
             {
@@ -540,26 +579,46 @@ int main()
         }
         case '4': // update priority
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
+            if (!theList.isEmpty()) // if the queue is not empty
             {
-                cout << "-";
-            }
+                cout << "All Priorities Taken: ";
+                if (!theList.isEmpty())     // if the queue is not empty
+                {
+                    theList.displayPrior(); //display all currently take priorities
+                }
+                else
+                {
+                    cout << "Queue is empty, nothing to display!" << endl;
+                }
 
-            cout << endl
-                 << endl;
-
-            if (!theList.isEmpty())
-            {
                 int oldprior, newprior;
                 cout << "Enter Patient's Priority to be changed: ";
                 cin >> oldprior;
+
+                while (!theList.checkPatPrior(oldprior)) // while the priority number entered doesn't exist
+                {
+                    cout << "There is no patient assigned with this priority" << endl;
+                    cout << endl;
+                    cout << "Enter the Patient's Priority to be changed: ";
+                    cin >> oldprior;           // ask for priority input again 
+                }
+
                 cout << "Enter Patient's new Priority: ";
                 cin >> newprior;
 
-                theList.updatePrior(oldprior, newprior);
-                //theList.quickSort(&theList.getpFirst());
-                theList.insertionSort(theList.getpFirst());
+                while (theList.uniquePatPrior(newprior)) // while new priority number entered is not unique
+                {
+                    cout << "Enter FREE Priority Level!" << endl;
+                    cout << "Enter Patient's new Priority: ";
+                    cin >> newprior;
+                }
+
+                theList.updatePrior(oldprior, newprior); // update priority position
+                theList.insertionSort(theList.getpFirst()); // sort the list
+
+                Link *searchNewPrior = theList.findPatPrior(newprior);
+                searchNewPrior->displayLink();      // display updated patient
+                cout << endl;
             }
             else
             {
@@ -569,12 +628,6 @@ int main()
         }
         case '5': // search
         {
-            // prints multiple - to visually divide each case when chosen
-            for (int i = 1; i <= 80; i++)
-            {
-                cout << "-";
-            }
-
             cout << endl
                  << endl;
 
@@ -596,9 +649,9 @@ int main()
                     cout << "Enter the Patient's SSN: ";
                     cin >> findssn;
                     Link *searchLink = theList.findPatSSN(findssn);
-                    if (searchLink != NULL)
+                    if (searchLink != NULL) // if the inputted ssn does not eqaual null
                     {
-                        searchLink->displayLink();
+                        searchLink->displayLink();   // display link for patient with the inputted ssn
                     }
                     else
                     {
@@ -612,9 +665,9 @@ int main()
                     cout << "Enter the Patient's Name: ";
                     getline(cin, findname);
                     Link *searchLink = theList.findPatName(findname);
-                    if (searchLink != NULL)
+                    if (searchLink != NULL) // if the inputted name does not eqaual null
                     {
-                        searchLink->displayLink();
+                        searchLink->displayLink();  // display link for patient with the inputted name
                     }
                     else
                     {
