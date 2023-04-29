@@ -586,17 +586,32 @@ int main()
         }
         case '4': // update priority
         {
-            cout << endl
-                 << endl;
-
             if (!theList.isEmpty())
             {
+                cout << "All Priorities Taken: ";
+                if (!theList.isEmpty())
+                {
+                    theList.displayPrior();
+                }
+                else
+                {
+                    cout << "Queue is empty, nothing to display!" << endl;
+                } 
+                
                 int oldprior, newprior;
                 cout << "Enter Patient's Priority to be changed: ";
                 cin >> oldprior;
                 cout << "Enter Patient's new Priority: ";
+                
                 cin >> newprior;
 
+                while(theList.uniquePatPrior(newprior))
+                {
+                    cout << "Enter FREE Priority Level!" << endl;
+                    cout << "Enter Patient's new Priority: ";
+                    cin >> newprior;
+                }
+                
                 theList.updatePrior(oldprior, newprior);
                 //theList.quickSort(&theList.getpFirst());
                 theList.insertionSort(theList.getpFirst());
